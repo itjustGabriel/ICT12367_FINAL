@@ -65,6 +65,6 @@ https://github.com/user-attachments/assets/5130b15d-f3bc-4d9b-a504-25b402dbbc4d
 
 ## วิธีการติดตั้ง
 โปรแกรมนี้ ตองการ python v3.8+ และ Django v4.0.4+ เพื่อรัน
-* pip install -r requirements.txt
+* pip install django
 ### วิธีรัน server
 *   python manage.py runserver
