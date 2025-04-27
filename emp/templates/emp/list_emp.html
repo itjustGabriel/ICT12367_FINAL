@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>รายชื่อพนักงาน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            padding: 30px;
+            background-color: #f8f9fa;
+        }
+        .btn-action {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- 🔘 หัวเรื่องและปุ่ม Logout ขวาบน -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">📋 รายชื่อพนักงานทั้งหมด</h2>
+            <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    ออกจากระบบ
+                </button>
+            </form>
+        </div>
+
+        <!-- 🔘 ปุ่มจัดการ -->
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+            <div>
+                <a href="{% url 'add_employee' %}" class="btn btn-success me-2">➕ เพิ่มพนักงาน</a>
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">📊 ดู Dashboard</a>
+                <a href="{% url 'export_employees_csv' %}" class="btn btn-outline-primary">📥 Export CSV</a>
+            </div>
+        </div>
+
+        <!-- 🔍 ฟอร์มค้นหา -->
+        <form method="get" class="mb-4 d-flex" role="search">
+            <input type="text" name="q" class="form-control me-2" placeholder="🔎 ค้นหาชื่อ ตำแหน่ง หรือแผนก" value="{{ query|default:'' }}">
+            <button type="submit" class="btn btn-outline-primary">ค้นหา</button>
+        </form>
+
+        <!-- 📋 ตารางรายชื่อพนักงาน -->
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>ชื่อ</th>
+                    <th>ตำแหน่ง</th>
+                    <th>แผนก</th>
+                    <th>Email</th>
+                    <th>โทรศัพท์</th>
+                    <th>วันที่เริ่มงาน</th>
+                    <th class="text-center">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.first_name }} {{ emp.last_name }}</td>
+                    <td>{{ emp.position }}</td>
+                    <td>{{ emp.department }}</td>
+                    <td>{{ emp.email }}</td>
+                    <td>{{ emp.phone }}</td>
+                    <td>{{ emp.hire_date|date:"d/m/Y" }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'edit_employee' emp.id %}" class="btn btn-sm btn-warning btn-action">✏️ แก้ไข</a>
+                        <a href="{% url 'delete_employee' emp.id %}" class="btn btn-sm btn-danger btn-action"
+                           onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบพนักงานคนนี้?');">🗑️ ลบ</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">— ไม่มีข้อมูลพนักงาน —</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
